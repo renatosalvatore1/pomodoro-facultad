@@ -4,7 +4,7 @@
   "outputDirectory": "public",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/trenes/:estacion/:hacia", "destination": "/api/trenes?estacion=:estacion&hacia=:hacia" },
+    { "source": "/api/trenes/:estacion/:destino", "destination": "/api/trenes?estacion=:estacion&destino=:destino" },
     { "source": "/api/trenes/:estacion", "destination": "/api/trenes?estacion=:estacion" }
   ]
 }

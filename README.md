@@ -17,8 +17,8 @@ Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30
 
 `/widget` es una página para instalar un widget de [Scriptable](https://apps.apple.com/app/scriptable/id1405459188) con los próximos trenes del ramal Retiro – J. L. Suárez (Mitre). El widget consulta `/api/trenes`, que toma los datos de [api-trenes](https://github.com/ariedro/api-trenes) (no oficial) y los simplifica:
 
-- `GET /api/trenes/Miguelete/Retiro` o `GET /api/trenes?estacion=Miguelete&hacia=Retiro`
-- `hacia` vacío muestra los dos sentidos; `GET /api/trenes` lista las estaciones.
+- `GET /api/trenes/Miguelete/Belgrano%20R` o `GET /api/trenes?estacion=Miguelete&destino=Belgrano R`: solo los trenes que te llevan a ese destino, con la hora a la que llegás.
+- Sin `destino` muestra los dos sentidos (o uno solo con `hacia=Retiro` / `hacia=Suárez`); `GET /api/trenes` lista las estaciones.
 - Las respuestas se guardan 20 segundos en la caché de Vercel para no cargar la fuente.
 - Para usar otra instancia de api-trenes, definí la variable `TRENES_API_URL`.
 

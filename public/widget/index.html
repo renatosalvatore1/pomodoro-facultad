@@ -61,15 +61,11 @@
   <section class="card" aria-labelledby="s1">
     <h2 id="s1">1. Elegí tu viaje</h2>
     <div class="row">
-      <label for="estacion">Estación
+      <label for="estacion">Subís en
         <select id="estacion"><option value="">Elegí tu estación</option></select>
       </label>
-      <label for="hacia">Hacia
-        <select id="hacia">
-          <option value="Retiro">Retiro</option>
-          <option value="J. L. Suárez">J. L. Suárez</option>
-          <option value="">Los dos sentidos</option>
-        </select>
+      <label for="destino">Bajás en
+        <select id="destino"></select>
       </label>
     </div>
     <div class="row">
@@ -102,7 +98,7 @@
       <li>En la pantalla de inicio, mantené apretado un espacio vacío → <b>Editar</b> → <b>Agregar widget</b> → buscá <b>Scriptable</b> → elegí el tamaño → <b>Agregar widget</b>.</li>
       <li>Mantené apretado el widget nuevo → <b>Editar widget</b> → en <b>Script</b> elegí <b>Tren Mitre</b>.</li>
     </ol>
-    <p class="note">Para tener otro widget con otra estación sin copiar el código de nuevo, agregá otro widget de Scriptable con el mismo script y en <b>Parameter</b> escribí, por ejemplo, <code>Drago &gt; Retiro</code>. Si ponés solo la estación (<code>Drago</code>), muestra los dos sentidos. También funciona en la pantalla bloqueada.</p>
+    <p class="note">Para tener otro widget con otra estación sin copiar el código de nuevo, agregá otro widget de Scriptable con el mismo script y en <b>Parameter</b> escribí, por ejemplo, <code>Drago &gt; Belgrano R</code>. Si ponés solo la estación (<code>Drago</code>), muestra los dos sentidos. También funciona en la pantalla bloqueada.</p>
   </section>
 
   <p class="note">iOS decide cada cuánto se actualiza un widget: según Apple, en general entre cada 15 y cada 60 minutos. El widget pide actualizarse cada 5 minutos dentro de tu horario, y fuera de él no gasta nada. La cuenta regresiva corre en vivo sin gastar batería, pero una demora nueva aparece recién en la próxima actualización. Si querés el dato del momento, tocá el widget. Los datos vienen de <a href="https://github.com/ariedro/api-trenes" target="_blank" rel="noopener">api-trenes</a>, un servicio no oficial que toma la información de la app de Trenes Argentinos: puede fallar o dejar de andar sin aviso.</p>
@@ -119,17 +115,26 @@
   var desde = $("desde"), hastaH = $("hasta-hora");
   for (var h = 0; h < 24; h++) { [desde, hastaH].forEach(function (sel) { var o = document.createElement("option"); o.value = h; o.textContent = h + ":00"; sel.appendChild(o); }); }
   desde.value = "4"; hastaH.value = "10";
-  var est = $("estacion"), hacia = $("hacia"), copyBtn = $("copy"), code = $("code"), preview = $("preview"), status = $("copy-status");
+  var est = $("estacion"), dest = $("destino"), copyBtn = $("copy"), code = $("code"), preview = $("preview"), status = $("copy-status");
   ESTACIONES.forEach(function (n) { var o = document.createElement("option"); o.value = n; o.textContent = n; est.appendChild(o); });
-  try { var saved = JSON.parse(localStorage.getItem(KEY) || "{}"); if (saved.estacion) est.value = saved.estacion; if (saved.hacia !== undefined) hacia.value = saved.hacia; if (saved.desde !== undefined) desde.value = String(saved.desde); if (saved.hasta !== undefined) hastaH.value = String(saved.hasta); } catch (e) {}
+  // Destino: todas las estaciones menos la de origen, o ninguna (muestra los dos sentidos)
+  function fillDest(keep) {
+    dest.textContent = "";
+    var none = document.createElement("option"); none.value = ""; none.textContent = "Sin destino: ver los dos sentidos"; dest.appendChild(none);
+    ESTACIONES.forEach(function (n) { if (n === est.value) return; var o = document.createElement("option"); o.value = n; o.textContent = n; dest.appendChild(o); });
+    dest.value = keep && keep !== est.value && ESTACIONES.indexOf(keep) >= 0 ? keep : "";
+  }
+  var LEGACY = { "Retiro": "Retiro", "J. L. Suárez": "José León Suárez" };
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "{}"); if (saved.estacion) est.value = saved.estacion; fillDest(saved.destino !== undefined ? saved.destino : LEGACY[saved.hacia] || ""); if (saved.desde !== undefined) desde.value = String(saved.desde); if (saved.hasta !== undefined) hastaH.value = String(saved.hasta); } catch (e) {}
 
+  if (!dest.options.length) fillDest("Retiro");
   var template = null;
   fetch("/widget/tren-mitre.js", { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) { template = t; update(); })
     .catch(function () { status.textContent = "No pude cargar el código del widget. Revisá la conexión y recargá la página."; });
 
   var esc = function (s) { return JSON.stringify(String(s)).slice(1, -1); };
   function buildCode() {
-    return template.replace("__API__", esc(location.origin + "/api/trenes")).replace("__ESTACION__", esc(est.value)).replace("__HACIA__", esc(hacia.value))
+    return template.replace("__API__", esc(location.origin + "/api/trenes")).replace("__ESTACION__", esc(est.value)).replace("__DESTINO__", esc(dest.value))
       .replace(/const HORA_DESDE = \d+;/, "const HORA_DESDE = " + parseInt(desde.value, 10) + ";")
       .replace(/const HORA_HASTA = \d+;/, "const HORA_HASTA = " + parseInt(hastaH.value, 10) + ";");
   }
@@ -147,7 +152,7 @@
     if (!est.value) { preview.innerHTML = '<p class="note">Elegí una estación para ver los próximos trenes.</p>'; return; }
     var my = ++seq;
     preview.innerHTML = '<p class="note">Buscando trenes…</p>';
-    fetch("/api/trenes?estacion=" + encodeURIComponent(est.value) + "&hacia=" + encodeURIComponent(hacia.value) + "&cantidad=4")
+    fetch("/api/trenes?estacion=" + encodeURIComponent(est.value) + "&destino=" + encodeURIComponent(dest.value) + "&cantidad=4")
       .then(function (r) { return r.json(); })
       .then(function (d) {
         if (my !== seq) return;
@@ -157,24 +162,25 @@
         d.trenes.slice(0, 4).forEach(function (t) {
           var row = document.createElement("div"); row.className = "train";
           var e = estado(t), mins = Math.max(0, Math.round((Date.parse(t.llegada) - Date.now()) / 60000));
-          [["t", hm(t.llegada)], ["to", "→ " + t.hacia], ["st " + e[1], e[0]], ["in", t.cancelado ? "" : mins <= 0 ? "llegando" : "en " + mins + " min"]].forEach(function (c) {
+          var to = t.destino && t.destino.llegada && !t.cancelado ? "llegás " + hm(t.destino.llegada) : "→ " + t.hacia;
+          [["t", hm(t.llegada)], ["st " + e[1], e[0]], ["to", to], ["in", t.cancelado ? "" : mins <= 0 ? "llegando" : "en " + mins + " min"]].forEach(function (c) {
             var s = document.createElement("span"); s.className = c[0]; s.textContent = c[1]; row.appendChild(s);
           });
           preview.appendChild(row);
         });
-        var foot = document.createElement("p"); foot.className = "note"; foot.textContent = "Así se va a ver la info en el widget. Datos de las " + hm(d.actualizado) + ".";
+        var foot = document.createElement("p"); foot.className = "note"; foot.textContent = (d.destino ? "Hora en que pasa por " + d.estacion.nombre + " y hora en que llegás a " + d.destino.nombre + ". " : "") + "Datos de las " + hm(d.actualizado) + ".";
         preview.appendChild(foot);
       })
       .catch(function () { if (my === seq) preview.innerHTML = '<p class="note late">No pude consultar los trenes. Probá de nuevo en un rato.</p>'; });
   }
   function update() {
-    try { localStorage.setItem(KEY, JSON.stringify({ estacion: est.value, hacia: hacia.value, desde: desde.value, hasta: hastaH.value })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ estacion: est.value, destino: dest.value, desde: desde.value, hasta: hastaH.value })); } catch (e) {}
     copyBtn.disabled = !est.value || !template;
     code.value = template && est.value ? buildCode() : "";
     status.textContent = "";
   }
-  est.addEventListener("change", function () { update(); loadPreview(); });
-  hacia.addEventListener("change", function () { update(); loadPreview(); });
+  est.addEventListener("change", function () { fillDest(dest.value); update(); loadPreview(); });
+  dest.addEventListener("change", function () { update(); loadPreview(); });
   desde.addEventListener("change", update);
   hastaH.addEventListener("change", update);
   copyBtn.addEventListener("click", function () {
