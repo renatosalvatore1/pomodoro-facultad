@@ -1,6 +1,8 @@
 # Pomodoro Facultad
 
-Timer Pomodoro con métricas semanales, sincronizado entre la Mac y el iPhone.
+App de productividad: timer Pomodoro con métricas semanales y lista de tareas, sincronizada entre la Mac y el iPhone.
+
+Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30 días) para que otro dispositivo desactualizado no la vuelva a agregar.
 
 ## Cómo está armado
 
