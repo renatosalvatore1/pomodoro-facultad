@@ -339,7 +339,7 @@ if (config.runsInWidget && !enHorario(new Date())) {
     if (family === "accessoryInline" || family === "accessoryRectangular" || family === "accessoryCircular") text(w, "Tren: sin datos", Font.systemFont(12), Color.white());
     else if (res.badStation) message(w, "Tren Mitre", `${res.error} Revisá el nombre en el parámetro del widget, por ejemplo "Miguelete > Retiro".`);
     else message(w, "Tren Mitre", `No pude traer los datos (${res.error}). Se reintenta solo en unos minutos.`);
-    w.refreshAfterDate = new Date(Math.min(Date.now() + 10 * MIN, cierre));
+    w.refreshAfterDate = new Date(Math.min(Date.now() + 5 * MIN, cierre));
   } else {
     if (family === "small") small(w, res);
     else if (family === "medium") medium(w, res);
@@ -348,13 +348,9 @@ if (config.runsInWidget && !enHorario(new Date())) {
       const t = res.data.trenes.length ? split(res.data.trenes).main : null;
       text(w, t ? `${hm(t.llegada)} ${estado(t).s} → ${shortTo(t.hacia)}` : "Sin trenes", Font.systemFont(12), Color.white());
     } else large(w, res);
-    // Próxima actualización: cuando pase el próximo tren, pero nunca antes de 5 min ni después de 10
-    // (Apple recomienda no pedir menos de 5 min; la cuenta regresiva igual avanza sola mientras tanto)
-    const next = res.data.trenes.length ? split(res.data.trenes).main : null;
-    const now = Date.now();
-    const pasa = next ? Date.parse(next.llegada) + 30000 : now + 10 * MIN;
-    const pedido = Math.min(Math.max(pasa, now + 5 * MIN), now + 10 * MIN);
-    w.refreshAfterDate = new Date(Math.min(pedido, cierre));
+    // Próxima actualización: en 5 minutos (el mínimo que recomienda Apple; iOS decide el momento exacto).
+    // La cuenta regresiva avanza sola mientras tanto.
+    w.refreshAfterDate = new Date(Math.min(Date.now() + 5 * MIN, cierre));
   }
 }
 
