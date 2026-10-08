@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Widget Tren Mitre</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23f97316'/%3E%3Ccircle cx='32' cy='36' r='18' fill='none' stroke='white' stroke-width='5'/%3E%3Cpath d='M26 10h12M32 36l7-7' stroke='white' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
+<style>
+
+  :root { --slate-50: 2 6 23; --slate-100: 15 23 42; --slate-200: 30 41 59; --slate-300: 51 65 85; --slate-400: 71 85 105; --slate-500: 100 116 139; --slate-600: 148 163 184; --slate-700: 203 213 225; --slate-800: 226 232 240; --slate-900: 255 255 255; --slate-950: 238 242 247; --c-work: #ea580c; --c-short: #0d9488; --c-long: #6366f1; --c-over: #d97706; --c-work-edge: #9a3412; --now-line: #ef4444; --danger: #dc2626; --n-bad: #dc2626; --n-warn: #b45309; --n-good: #0f766e; --n-info: #475569; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #f97316; --c-short: #14b8a6; --c-long: #818cf8; --c-over: #fbbf24; --c-work-edge: #fdba74; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; } }
+  :root[data-theme="dark"] { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #f97316; --c-short: #14b8a6; --c-long: #818cf8; --c-over: #fbbf24; --c-work-edge: #fdba74; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; }
+  :root[data-app-theme="light"] { --slate-50: 2 6 23; --slate-100: 15 23 42; --slate-200: 30 41 59; --slate-300: 51 65 85; --slate-400: 71 85 105; --slate-500: 100 116 139; --slate-600: 148 163 184; --slate-700: 203 213 225; --slate-800: 226 232 240; --slate-900: 255 255 255; --slate-950: 238 242 247; --c-work: #ea580c; --c-short: #0d9488; --c-long: #6366f1; --c-over: #d97706; --c-work-edge: #9a3412; --now-line: #ef4444; --danger: #dc2626; --n-bad: #dc2626; --n-warn: #b45309; --n-good: #0f766e; --n-info: #475569; color-scheme: light; }
+  :root[data-app-theme="dark"] { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #f97316; --c-short: #14b8a6; --c-long: #818cf8; --c-over: #fbbf24; --c-work-edge: #fdba74; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; }
+  html, body { background: rgb(var(--slate-950)); }
+  body { margin: 0; color: rgb(var(--slate-100)); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #root > .boot { min-height: 60vh; display: flex; align-items: center; justify-content: center; color: rgb(var(--slate-400)); font-size: 14px; }
+  input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  * { box-sizing: border-box; }
+  body { font-size: 15px; line-height: 1.5; }
+  .wrap { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; display: grid; gap: 16px; }
+  a { color: var(--c-short); }
+  .back { font-size: 13px; color: rgb(var(--slate-400)); text-decoration: none; }
+  h1 { font-size: 24px; line-height: 1.2; margin: 4px 0 0; text-wrap: balance; }
+  .lead { margin: 0; color: rgb(var(--slate-400)); }
+  .card { background: rgb(var(--slate-900)); border: 1px solid rgb(var(--slate-800)); border-radius: 18px; padding: 18px; display: grid; gap: 12px; }
+  .card h2 { font-size: 15px; margin: 0; }
+  label { display: grid; gap: 6px; font-size: 13px; color: rgb(var(--slate-400)); }
+  select { font: inherit; font-size: 16px; color: rgb(var(--slate-100)); background: rgb(var(--slate-800)); border: 1px solid rgb(var(--slate-700)); border-radius: 12px; padding: 10px 12px; width: 100%; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  @media (max-width: 420px) { .row { grid-template-columns: 1fr; } }
+  .preview { display: grid; gap: 6px; min-height: 64px; }
+  .train { display: flex; align-items: baseline; gap: 10px; font-variant-numeric: tabular-nums; }
+  .train .t { font-weight: 700; font-size: 17px; min-width: 52px; }
+  .train .to { color: rgb(var(--slate-400)); font-size: 13px; }
+  .train .st { font-size: 13px; font-weight: 600; }
+  .train .in { margin-left: auto; color: rgb(var(--slate-400)); font-size: 13px; }
+  .late { color: var(--n-bad); } .ok { color: var(--n-good); } .dim { color: rgb(var(--slate-400)); }
+  .note { font-size: 13px; color: rgb(var(--slate-400)); margin: 0; }
+  button.primary { font: inherit; font-weight: 700; color: #fff; background: var(--c-work); border: 0; border-radius: 14px; padding: 14px; width: 100%; font-size: 16px; }
+  button.primary:disabled { opacity: .45; }
+  button:focus-visible, select:focus-visible, a:focus-visible { outline: 2px solid var(--c-short); outline-offset: 2px; }
+  ol { margin: 0; padding-left: 20px; display: grid; gap: 10px; }
+  ol li::marker { color: var(--c-work); font-weight: 700; }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; background: rgb(var(--slate-800)); padding: 1px 6px; border-radius: 6px; }
+  details summary { cursor: pointer; font-size: 13px; color: rgb(var(--slate-400)); }
+  textarea { width: 100%; height: 220px; margin-top: 8px; font: 12px ui-monospace, SFMono-Regular, Menlo, monospace; color: rgb(var(--slate-100)); background: rgb(var(--slate-800)); border: 1px solid rgb(var(--slate-700)); border-radius: 12px; padding: 10px; }
+  .status { font-size: 13px; min-height: 1.5em; margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div>
+    <a class="back" href="/">← Volver al Pomodoro</a>
+    <h1>Widget del tren Mitre</h1>
+  </div>
+  <p class="lead">Los próximos trenes del ramal Retiro – J. L. Suárez en la pantalla de inicio de tu iPhone, con la demora en tiempo real y una cuenta regresiva que avanza sola.</p>
+
+  <section class="card" aria-labelledby="s1">
+    <h2 id="s1">1. Elegí tu viaje</h2>
+    <div class="row">
+      <label for="estacion">Estación
+        <select id="estacion"><option value="">Elegí tu estación</option></select>
+      </label>
+      <label for="hacia">Hacia
+        <select id="hacia">
+          <option value="Retiro">Retiro</option>
+          <option value="J. L. Suárez">J. L. Suárez</option>
+          <option value="">Los dos sentidos</option>
+        </select>
+      </label>
+    </div>
+    <div class="preview" id="preview" aria-live="polite"><p class="note">Elegí una estación para ver los próximos trenes.</p></div>
+  </section>
+
+  <section class="card" aria-labelledby="s2">
+    <h2 id="s2">2. Copiá el código</h2>
+    <button class="primary" id="copy" disabled>Copiar código del widget</button>
+    <p class="status" id="copy-status" role="status"></p>
+    <details>
+      <summary>Ver el código</summary>
+      <textarea id="code" readonly spellcheck="false" aria-label="Código del widget"></textarea>
+    </details>
+  </section>
+
+  <section class="card" aria-labelledby="s3">
+    <h2 id="s3">3. Instalalo en el iPhone</h2>
+    <ol>
+      <li>Instalá <a href="https://apps.apple.com/app/scriptable/id1405459188" target="_blank" rel="noopener">Scriptable</a> desde el App Store (es gratis).</li>
+      <li>Abrí Scriptable, tocá <b>+</b> arriba a la derecha y pegá el código. Tocá el título de arriba y ponele <b>Tren Mitre</b>. Tocá <b>Listo</b>.</li>
+      <li>En la pantalla de inicio, mantené apretado un espacio vacío → <b>Editar</b> → <b>Agregar widget</b> → buscá <b>Scriptable</b> → elegí el tamaño → <b>Agregar widget</b>.</li>
+      <li>Mantené apretado el widget nuevo → <b>Editar widget</b> → en <b>Script</b> elegí <b>Tren Mitre</b>.</li>
+    </ol>
+    <p class="note">Para tener otro widget con otra estación sin copiar el código de nuevo, agregá otro widget de Scriptable con el mismo script y en <b>Parameter</b> escribí, por ejemplo, <code>Drago &gt; Retiro</code>. Si ponés solo la estación (<code>Drago</code>), muestra los dos sentidos. También funciona en la pantalla bloqueada.</p>
+  </section>
+
+  <p class="note">iOS decide cada cuánto se actualiza un widget (en general, cada algunos minutos). La cuenta regresiva corre en vivo, pero una demora nueva aparece recién en la próxima actualización. Los datos vienen de <a href="https://github.com/ariedro/api-trenes" target="_blank" rel="noopener">api-trenes</a>, un servicio no oficial que toma la información de la app de Trenes Argentinos: puede fallar o dejar de andar sin aviso.</p>
+</div>
+
+<script>
+(function () {
+  var ESTACIONES = ["Retiro","3 de Febrero","Ministro Carranza","Colegiales","Belgrano R","Drago","Urquiza","Pueyrredón","Miguelete","San Martín","San Andrés","Malaver","Villa Ballester","Chilavert","José León Suárez"];
+  var KEY = "pomodoro-widget-tren";
+  // Mismo tema que el Pomodoro
+  try { var s = JSON.parse(localStorage.getItem("pomodoro-facultad-v1") || "{}"); var th = s.settings && s.settings.theme; if (th === "light" || th === "dark") document.documentElement.setAttribute("data-app-theme", th); } catch (e) {}
+
+  var $ = function (id) { return document.getElementById(id); };
+  var est = $("estacion"), hacia = $("hacia"), copyBtn = $("copy"), code = $("code"), preview = $("preview"), status = $("copy-status");
+  ESTACIONES.forEach(function (n) { var o = document.createElement("option"); o.value = n; o.textContent = n; est.appendChild(o); });
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "{}"); if (saved.estacion) est.value = saved.estacion; if (saved.hacia !== undefined) hacia.value = saved.hacia; } catch (e) {}
+
+  var template = null;
+  fetch("/widget/tren-mitre.js", { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) { template = t; update(); })
+    .catch(function () { status.textContent = "No pude cargar el código del widget. Revisá la conexión y recargá la página."; });
+
+  var esc = function (s) { return JSON.stringify(String(s)).slice(1, -1); };
+  function buildCode() {
+    return template.replace("__API__", esc(location.origin + "/api/trenes")).replace("__ESTACION__", esc(est.value)).replace("__HACIA__", esc(hacia.value));
+  }
+  var pad = function (n) { return String(n).padStart(2, "0"); };
+  var hm = function (iso) { var d = new Date(iso); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
+  function estado(t) {
+    if (t.cancelado) return ["Cancelado", "late"];
+    if (!t.enVivo) return ["programado", "dim"];
+    if (t.demoraMin > 0) return ["+" + t.demoraMin + " min", "late"];
+    if (t.demoraMin < 0) return [t.demoraMin + " min", "ok"];
+    return ["a horario", "ok"];
+  }
+  var seq = 0;
+  function loadPreview() {
+    if (!est.value) { preview.innerHTML = '<p class="note">Elegí una estación para ver los próximos trenes.</p>'; return; }
+    var my = ++seq;
+    preview.innerHTML = '<p class="note">Buscando trenes…</p>';
+    fetch("/api/trenes?estacion=" + encodeURIComponent(est.value) + "&hacia=" + encodeURIComponent(hacia.value) + "&cantidad=4")
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (my !== seq) return;
+        preview.textContent = "";
+        if (d.error) { var p = document.createElement("p"); p.className = "note late"; p.textContent = d.mensaje || "No se pudo consultar."; preview.appendChild(p); return; }
+        if (!d.trenes.length) { preview.innerHTML = '<p class="note">No hay trenes próximos informados para esta estación.</p>'; return; }
+        d.trenes.slice(0, 4).forEach(function (t) {
+          var row = document.createElement("div"); row.className = "train";
+          var e = estado(t), mins = Math.max(0, Math.round((Date.parse(t.llegada) - Date.now()) / 60000));
+          [["t", hm(t.llegada)], ["to", "→ " + t.hacia], ["st " + e[1], e[0]], ["in", t.cancelado ? "" : mins <= 0 ? "llegando" : "en " + mins + " min"]].forEach(function (c) {
+            var s = document.createElement("span"); s.className = c[0]; s.textContent = c[1]; row.appendChild(s);
+          });
+          preview.appendChild(row);
+        });
+        var foot = document.createElement("p"); foot.className = "note"; foot.textContent = "Así se va a ver la info en el widget. Datos de las " + hm(d.actualizado) + ".";
+        preview.appendChild(foot);
+      })
+      .catch(function () { if (my === seq) preview.innerHTML = '<p class="note late">No pude consultar los trenes. Probá de nuevo en un rato.</p>'; });
+  }
+  function update() {
+    try { localStorage.setItem(KEY, JSON.stringify({ estacion: est.value, hacia: hacia.value })); } catch (e) {}
+    copyBtn.disabled = !est.value || !template;
+    code.value = template && est.value ? buildCode() : "";
+    status.textContent = "";
+  }
+  est.addEventListener("change", function () { update(); loadPreview(); });
+  hacia.addEventListener("change", function () { update(); loadPreview(); });
+  copyBtn.addEventListener("click", function () {
+    var txt = buildCode();
+    var done = function () { status.textContent = "Copiado. Ahora pegalo en Scriptable (paso 3)."; };
+    var fallback = function () { var d = code.closest("details"); if (d) d.open = true; code.focus(); code.select(); try { document.execCommand("copy"); done(); } catch (e) { status.textContent = "Seleccioná el código de abajo y copialo a mano."; } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, fallback); else fallback();
+  });
+  update(); loadPreview();
+})();
+</script>
+</body>
+</html>

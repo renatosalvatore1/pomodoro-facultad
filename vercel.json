@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/api/trenes/:estacion/:hacia", "destination": "/api/trenes?estacion=:estacion&hacia=:hacia" },
+    { "source": "/api/trenes/:estacion", "destination": "/api/trenes?estacion=:estacion" }
+  ]
 }

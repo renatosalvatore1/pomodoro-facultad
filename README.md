@@ -13,6 +13,15 @@ Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30
 | `lib/handler.js` | La lógica de esa función. |
 | Vercel Blob (privado) | Donde quedan los datos: `pomodoro/actual.json` (ajustes, timer y mes en curso) y `pomodoro/historial/h-AAAA-MM.json` (meses anteriores). |
 
+## Widget del tren (iPhone)
+
+`/widget` es una página para instalar un widget de [Scriptable](https://apps.apple.com/app/scriptable/id1405459188) con los próximos trenes del ramal Retiro – J. L. Suárez (Mitre). El widget consulta `/api/trenes`, que toma los datos de [api-trenes](https://github.com/ariedro/api-trenes) (no oficial) y los simplifica:
+
+- `GET /api/trenes/Miguelete/Retiro` o `GET /api/trenes?estacion=Miguelete&hacia=Retiro`
+- `hacia` vacío muestra los dos sentidos; `GET /api/trenes` lista las estaciones.
+- Las respuestas se guardan 20 segundos en la caché de Vercel para no cargar la fuente.
+- Para usar otra instancia de api-trenes, definí la variable `TRENES_API_URL`.
+
 ## Configuración en Vercel
 
 1. Un Blob store **privado** conectado a este proyecto (pestaña Storage).
