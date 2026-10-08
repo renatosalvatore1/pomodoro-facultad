@@ -72,6 +72,15 @@
         </select>
       </label>
     </div>
+    <div class="row">
+      <label for="desde">Busca trenes desde las
+        <select id="desde"></select>
+      </label>
+      <label for="hasta-hora">hasta las
+        <select id="hasta-hora"></select>
+      </label>
+    </div>
+    <p class="note">Fuera de ese horario el widget no se conecta a internet: muestra "en pausa" y ahorra batería. Si tocás el widget, igual te muestra los trenes del momento.</p>
     <div class="preview" id="preview" aria-live="polite"><p class="note">Elegí una estación para ver los próximos trenes.</p></div>
   </section>
 
@@ -96,7 +105,7 @@
     <p class="note">Para tener otro widget con otra estación sin copiar el código de nuevo, agregá otro widget de Scriptable con el mismo script y en <b>Parameter</b> escribí, por ejemplo, <code>Drago &gt; Retiro</code>. Si ponés solo la estación (<code>Drago</code>), muestra los dos sentidos. También funciona en la pantalla bloqueada.</p>
   </section>
 
-  <p class="note">iOS decide cada cuánto se actualiza un widget (en general, cada algunos minutos). La cuenta regresiva corre en vivo, pero una demora nueva aparece recién en la próxima actualización. Los datos vienen de <a href="https://github.com/ariedro/api-trenes" target="_blank" rel="noopener">api-trenes</a>, un servicio no oficial que toma la información de la app de Trenes Argentinos: puede fallar o dejar de andar sin aviso.</p>
+  <p class="note">iOS decide cada cuánto se actualiza un widget: según Apple, en general entre cada 15 y cada 60 minutos. El widget pide actualizarse cada 5 a 10 minutos dentro de tu horario, y fuera de él no gasta nada. La cuenta regresiva corre en vivo sin gastar batería, pero una demora nueva aparece recién en la próxima actualización. Si querés el dato del momento, tocá el widget. Los datos vienen de <a href="https://github.com/ariedro/api-trenes" target="_blank" rel="noopener">api-trenes</a>, un servicio no oficial que toma la información de la app de Trenes Argentinos: puede fallar o dejar de andar sin aviso.</p>
 </div>
 
 <script>
@@ -107,9 +116,12 @@
   try { var s = JSON.parse(localStorage.getItem("pomodoro-facultad-v1") || "{}"); var th = s.settings && s.settings.theme; if (th === "light" || th === "dark") document.documentElement.setAttribute("data-app-theme", th); } catch (e) {}
 
   var $ = function (id) { return document.getElementById(id); };
+  var desde = $("desde"), hastaH = $("hasta-hora");
+  for (var h = 0; h < 24; h++) { [desde, hastaH].forEach(function (sel) { var o = document.createElement("option"); o.value = h; o.textContent = h + ":00"; sel.appendChild(o); }); }
+  desde.value = "4"; hastaH.value = "10";
   var est = $("estacion"), hacia = $("hacia"), copyBtn = $("copy"), code = $("code"), preview = $("preview"), status = $("copy-status");
   ESTACIONES.forEach(function (n) { var o = document.createElement("option"); o.value = n; o.textContent = n; est.appendChild(o); });
-  try { var saved = JSON.parse(localStorage.getItem(KEY) || "{}"); if (saved.estacion) est.value = saved.estacion; if (saved.hacia !== undefined) hacia.value = saved.hacia; } catch (e) {}
+  try { var saved = JSON.parse(localStorage.getItem(KEY) || "{}"); if (saved.estacion) est.value = saved.estacion; if (saved.hacia !== undefined) hacia.value = saved.hacia; if (saved.desde !== undefined) desde.value = String(saved.desde); if (saved.hasta !== undefined) hastaH.value = String(saved.hasta); } catch (e) {}
 
   var template = null;
   fetch("/widget/tren-mitre.js", { cache: "no-store" }).then(function (r) { return r.text(); }).then(function (t) { template = t; update(); })
@@ -117,7 +129,9 @@
 
   var esc = function (s) { return JSON.stringify(String(s)).slice(1, -1); };
   function buildCode() {
-    return template.replace("__API__", esc(location.origin + "/api/trenes")).replace("__ESTACION__", esc(est.value)).replace("__HACIA__", esc(hacia.value));
+    return template.replace("__API__", esc(location.origin + "/api/trenes")).replace("__ESTACION__", esc(est.value)).replace("__HACIA__", esc(hacia.value))
+      .replace(/const HORA_DESDE = \d+;/, "const HORA_DESDE = " + parseInt(desde.value, 10) + ";")
+      .replace(/const HORA_HASTA = \d+;/, "const HORA_HASTA = " + parseInt(hastaH.value, 10) + ";");
   }
   var pad = function (n) { return String(n).padStart(2, "0"); };
   var hm = function (iso) { var d = new Date(iso); return pad(d.getHours()) + ":" + pad(d.getMinutes()); };
@@ -154,13 +168,15 @@
       .catch(function () { if (my === seq) preview.innerHTML = '<p class="note late">No pude consultar los trenes. Probá de nuevo en un rato.</p>'; });
   }
   function update() {
-    try { localStorage.setItem(KEY, JSON.stringify({ estacion: est.value, hacia: hacia.value })); } catch (e) {}
+    try { localStorage.setItem(KEY, JSON.stringify({ estacion: est.value, hacia: hacia.value, desde: desde.value, hasta: hastaH.value })); } catch (e) {}
     copyBtn.disabled = !est.value || !template;
     code.value = template && est.value ? buildCode() : "";
     status.textContent = "";
   }
   est.addEventListener("change", function () { update(); loadPreview(); });
   hacia.addEventListener("change", function () { update(); loadPreview(); });
+  desde.addEventListener("change", update);
+  hastaH.addEventListener("change", update);
   copyBtn.addEventListener("click", function () {
     var txt = buildCode();
     var done = function () { status.textContent = "Copiado. Ahora pegalo en Scriptable (paso 3)."; };

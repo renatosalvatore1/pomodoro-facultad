@@ -14,6 +14,12 @@ const API = "__API__";
 let ESTACION = "__ESTACION__";
 let HACIA = "__HACIA__"; // "Retiro", "J. L. Suárez" o "" para los dos sentidos
 
+// Horario en que el widget busca trenes (hora del iPhone). Fuera de este horario no se conecta a internet
+// ni hace cálculos: muestra "en pausa" y le pide a iOS volver a despertarlo recién a HORA_DESDE.
+// Si los dos valores son iguales, busca todo el día. Al tocar el widget sí busca, a cualquier hora.
+const HORA_DESDE = 4;
+const HORA_HASTA = 10;
+
 const param = String(args.widgetParameter || "").trim();
 if (param) {
   const parts = param.split(/\s*(?:>|→|->|\/)\s*/);
@@ -277,6 +283,36 @@ function rectangular(w, res) {
   countdown(w, t, 16, Color.white());
 }
 
+// ---------- Horario ----------
+function enHorario(d) {
+  if (HORA_DESDE === HORA_HASTA) return true;
+  const h = d.getHours() + d.getMinutes() / 60;
+  return HORA_DESDE < HORA_HASTA ? h >= HORA_DESDE && h < HORA_HASTA : h >= HORA_DESDE || h < HORA_HASTA;
+}
+// Próxima vez que el reloj marque esa hora en punto (hoy o mañana)
+function proxima(hora) {
+  const d = new Date();
+  d.setHours(hora, 0, 0, 0);
+  if (d.getTime() <= Date.now()) d.setDate(d.getDate() + 1);
+  return d;
+}
+
+function pausa(w, family) {
+  const vuelve = `${HORA_DESDE}:00`;
+  const titulo = `${ESTACION}${HACIA ? ` → ${shortTo(HACIA)}` : ""}`;
+  if (family === "accessoryInline" || family === "accessoryCircular") { text(w, `Tren: desde las ${vuelve}`, Font.systemFont(12), Color.white()); return; }
+  if (family === "accessoryRectangular") {
+    text(w, titulo, Font.semiboldSystemFont(12), Color.white());
+    text(w, `En pausa hasta las ${vuelve}`, Font.systemFont(12), Color.white());
+    return;
+  }
+  header(w, null, titulo);
+  w.addSpacer();
+  text(w, `Vuelve a las ${vuelve}`, Font.semiboldSystemFont(family === "small" ? 15 : 17), C.text, { scale: 0.7 });
+  text(w, `Busca trenes de ${HORA_DESDE} a ${HORA_HASTA} h para ahorrar batería.`, Font.systemFont(11), C.dim, { lines: 2, scale: 0.8 });
+  w.addSpacer();
+}
+
 function message(w, title, body) {
   header(w, null, title);
   w.addSpacer(6);
@@ -285,29 +321,41 @@ function message(w, title, body) {
 }
 
 // ---------- Armado ----------
-const res = await load();
 const family = config.widgetFamily || "large";
 const w = new ListWidget();
 w.backgroundColor = C.bg;
 w.setPadding(12, 14, 12, 14);
+const MIN = 60000;
+// Para pasar a "en pausa" apenas termina el horario
+const cierre = HORA_DESDE === HORA_HASTA ? Infinity : proxima(HORA_HASTA).getTime() + 15000;
 
-if (!res.data) {
-  if (family === "accessoryInline" || family === "accessoryRectangular" || family === "accessoryCircular") text(w, "Tren: sin datos", Font.systemFont(12), Color.white());
-  else if (res.badStation) message(w, "Tren Mitre", `${res.error} Revisá el nombre en el parámetro del widget, por ejemplo "Miguelete > Retiro".`);
-  else message(w, "Tren Mitre", `No pude traer los datos (${res.error}). Se reintenta solo en unos minutos.`);
-  w.refreshAfterDate = new Date(Date.now() + 5 * 60000);
+if (config.runsInWidget && !enHorario(new Date())) {
+  // Fuera de horario: no se conecta ni lee nada; iOS lo vuelve a despertar a HORA_DESDE
+  pausa(w, family);
+  w.refreshAfterDate = proxima(HORA_DESDE);
 } else {
-  if (family === "small") small(w, res);
-  else if (family === "medium") medium(w, res);
-  else if (family === "accessoryRectangular") rectangular(w, res);
-  else if (family === "accessoryInline" || family === "accessoryCircular") {
-    const t = res.data.trenes.length ? split(res.data.trenes).main : null;
-    text(w, t ? `${hm(t.llegada)} ${estado(t).s} → ${shortTo(t.hacia)}` : "Sin trenes", Font.systemFont(12), Color.white());
-  } else large(w, res);
-  // Pedirle a iOS que lo actualice poco después del próximo tren (iOS decide el momento exacto)
-  const next = res.data.trenes.length ? split(res.data.trenes).main : null;
-  const soon = next ? Date.parse(next.llegada) + 45000 : Infinity;
-  w.refreshAfterDate = new Date(Math.max(Date.now() + 60000, Math.min(Date.now() + 5 * 60000, soon)));
+  const res = await load();
+  if (!res.data) {
+    if (family === "accessoryInline" || family === "accessoryRectangular" || family === "accessoryCircular") text(w, "Tren: sin datos", Font.systemFont(12), Color.white());
+    else if (res.badStation) message(w, "Tren Mitre", `${res.error} Revisá el nombre en el parámetro del widget, por ejemplo "Miguelete > Retiro".`);
+    else message(w, "Tren Mitre", `No pude traer los datos (${res.error}). Se reintenta solo en unos minutos.`);
+    w.refreshAfterDate = new Date(Math.min(Date.now() + 10 * MIN, cierre));
+  } else {
+    if (family === "small") small(w, res);
+    else if (family === "medium") medium(w, res);
+    else if (family === "accessoryRectangular") rectangular(w, res);
+    else if (family === "accessoryInline" || family === "accessoryCircular") {
+      const t = res.data.trenes.length ? split(res.data.trenes).main : null;
+      text(w, t ? `${hm(t.llegada)} ${estado(t).s} → ${shortTo(t.hacia)}` : "Sin trenes", Font.systemFont(12), Color.white());
+    } else large(w, res);
+    // Próxima actualización: cuando pase el próximo tren, pero nunca antes de 5 min ni después de 10
+    // (Apple recomienda no pedir menos de 5 min; la cuenta regresiva igual avanza sola mientras tanto)
+    const next = res.data.trenes.length ? split(res.data.trenes).main : null;
+    const now = Date.now();
+    const pasa = next ? Date.parse(next.llegada) + 30000 : now + 10 * MIN;
+    const pedido = Math.min(Math.max(pasa, now + 5 * MIN), now + 10 * MIN);
+    w.refreshAfterDate = new Date(Math.min(pedido, cierre));
+  }
 }
 
 if (config.runsInWidget) Script.setWidget(w);
