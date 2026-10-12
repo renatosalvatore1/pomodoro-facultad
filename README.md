@@ -13,6 +13,10 @@ Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30
 | `lib/handler.js` | La lógica de esa función. |
 | Vercel Blob (privado) | Donde quedan los datos: `pomodoro/actual.json` (ajustes, timer y mes en curso) y `pomodoro/historial/h-AAAA-MM.json` (meses anteriores). |
 
+## Sonido para concentrarse
+
+En la pestaña Timer se elige un sonido de fondo (arroyo, ruido rosa o ruido blanco) que suena mientras corre el trabajo y se corta en la pausa y el descanso. Se genera en el navegador (sin archivos), se elige por dispositivo y suena solo en el dispositivo donde arrancaste el trabajo.
+
 ## Widget del tren (iPhone)
 
 `/widget` es una página para instalar un widget de [Scriptable](https://apps.apple.com/app/scriptable/id1405459188) con los próximos trenes del ramal Retiro – J. L. Suárez (Mitre). El widget consulta `/api/trenes`, que toma los datos de [api-trenes](https://github.com/ariedro/api-trenes) (no oficial) y los simplifica:
