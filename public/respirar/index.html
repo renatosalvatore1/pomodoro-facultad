@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Respirar</title>
+<meta name="description" content="Respiración guiada para bajar la ansiedad, basada en estudios." />
+<link rel="icon" type="image/png" sizes="192x192" href="/respirar/icon-192.png" />
+<link rel="apple-touch-icon" href="/respirar/apple-touch-icon.png" />
+<link rel="manifest" href="/respirar/manifest.webmanifest" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-title" content="Respirar" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#eef2f7" />
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#020617" />
+<script>
+  // Mismo tema que elegiste en el Pomodoro (claro, oscuro o automático)
+  try {
+    var t = (JSON.parse(localStorage.getItem("pomodoro-facultad-v1") || "{}").settings || {}).theme;
+    if (t === "light" || t === "dark") document.documentElement.setAttribute("data-app-theme", t);
+  } catch (e) {}
+</script>
+<style>
+
+  :root { --slate-50: 2 6 23; --slate-100: 15 23 42; --slate-200: 30 41 59; --slate-300: 51 65 85; --slate-400: 71 85 105; --slate-500: 100 116 139; --slate-600: 148 163 184; --slate-700: 203 213 225; --slate-800: 226 232 240; --slate-900: 255 255 255; --slate-950: 238 242 247; --c-work: #5235d4; --c-short: #0d9488; --c-long: #0284c7; --c-over: #d97706; --c-work-edge: #38257e; --now-line: #ef4444; --danger: #dc2626; --n-bad: #dc2626; --n-warn: #b45309; --n-good: #0f766e; --n-info: #475569; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #8a74f6; --c-short: #14b8a6; --c-long: #38bdf8; --c-over: #fbbf24; --c-work-edge: #c2b6fb; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; } }
+  :root[data-theme="dark"] { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #8a74f6; --c-short: #14b8a6; --c-long: #38bdf8; --c-over: #fbbf24; --c-work-edge: #c2b6fb; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; }
+  :root[data-app-theme="light"] { --slate-50: 2 6 23; --slate-100: 15 23 42; --slate-200: 30 41 59; --slate-300: 51 65 85; --slate-400: 71 85 105; --slate-500: 100 116 139; --slate-600: 148 163 184; --slate-700: 203 213 225; --slate-800: 226 232 240; --slate-900: 255 255 255; --slate-950: 238 242 247; --c-work: #5235d4; --c-short: #0d9488; --c-long: #0284c7; --c-over: #d97706; --c-work-edge: #38257e; --now-line: #ef4444; --danger: #dc2626; --n-bad: #dc2626; --n-warn: #b45309; --n-good: #0f766e; --n-info: #475569; color-scheme: light; }
+  :root[data-app-theme="dark"] { --slate-50: 248 250 252; --slate-100: 241 245 249; --slate-200: 226 232 240; --slate-300: 203 213 225; --slate-400: 148 163 184; --slate-500: 100 116 139; --slate-600: 71 85 105; --slate-700: 51 65 85; --slate-800: 30 41 59; --slate-900: 15 23 42; --slate-950: 2 6 23; --c-work: #8a74f6; --c-short: #14b8a6; --c-long: #38bdf8; --c-over: #fbbf24; --c-work-edge: #c2b6fb; --now-line: #f87171; --danger: #f87171; --n-bad: #f87171; --n-warn: #fbbf24; --n-good: #2dd4bf; --n-info: #94a3b8; color-scheme: dark; }
+  html, body { background: rgb(var(--slate-950)); }
+  body { margin: 0; color: rgb(var(--slate-100)); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  #root > .boot { min-height: 60vh; display: flex; align-items: center; justify-content: center; color: rgb(var(--slate-400)); font-size: 14px; }
+  input[type=number]::-webkit-inner-spin-button { opacity: 0.4; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { height: 100%; }
+  body { font-size: 15px; line-height: 1.5; -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  button:focus-visible, a:focus-visible, summary:focus-visible { outline: 2px solid var(--c-work); outline-offset: 2px; }
+  .app { max-width: 560px; min-height: 100%; margin: 0 auto; display: flex; flex-direction: column;
+    padding: max(14px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+  .top { display: flex; align-items: center; gap: 10px; min-height: 40px; }
+  .back { font-size: 14px; color: rgb(var(--slate-400)); text-decoration: none; padding: 6px 2px; }
+  .brand { display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 17px; margin-right: auto; }
+  .brand svg { color: var(--c-work); }
+  .iconbtn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgb(var(--slate-800)); background: rgb(var(--slate-900)); color: rgb(var(--slate-400));
+    border-radius: 999px; padding: 7px 12px; font-size: 13px; }
+  .iconbtn[aria-pressed="true"] { color: var(--c-work); border-color: color-mix(in srgb, var(--c-work) 45%, transparent); background: color-mix(in srgb, var(--c-work) 12%, transparent); }
+
+  /* Elegir ejercicio */
+  #setup { display: grid; gap: 18px; padding-top: 10px; }
+  h1 { font-size: 26px; line-height: 1.15; margin: 8px 0 0; text-wrap: balance; }
+  .lead { margin: 0; color: rgb(var(--slate-400)); }
+  .ex-list { display: grid; gap: 10px; }
+  .ex { text-align: left; display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; align-items: start; width: 100%;
+    background: rgb(var(--slate-900)); border: 1.5px solid rgb(var(--slate-800)); border-radius: 18px; padding: 14px 16px; }
+  .ex[aria-checked="true"] { border-color: var(--c-work); background: color-mix(in srgb, var(--c-work) 9%, rgb(var(--slate-900))); }
+  .ex .name { font-weight: 700; font-size: 16px; }
+  .ex .tag { font-size: 12px; font-weight: 600; color: var(--c-work); background: color-mix(in srgb, var(--c-work) 14%, transparent); border-radius: 999px; padding: 2px 9px; white-space: nowrap; }
+  .ex .pat { grid-column: 1 / -1; display: flex; gap: 4px; height: 8px; margin: 6px 0 2px; }
+  .ex .pat i { border-radius: 99px; }
+  .ex .desc { grid-column: 1 / -1; font-size: 13px; color: rgb(var(--slate-400)); }
+  .opts { display: grid; gap: 14px; }
+  .opt { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .opt > span { font-size: 14px; color: rgb(var(--slate-300)); }
+  .seg { display: inline-flex; background: rgb(var(--slate-900)); border: 1px solid rgb(var(--slate-800)); border-radius: 12px; padding: 3px; }
+  .seg button { border: 0; background: none; border-radius: 9px; padding: 6px 14px; font-size: 14px; color: rgb(var(--slate-400)); font-variant-numeric: tabular-nums; }
+  .seg button[aria-checked="true"] { background: rgb(var(--slate-800)); color: rgb(var(--slate-100)); font-weight: 600; }
+  .primary { border: 0; border-radius: 16px; padding: 15px; width: 100%; font-weight: 700; font-size: 17px; color: #fff; background: var(--c-work);
+    box-shadow: 0 10px 28px color-mix(in srgb, var(--c-work) 35%, transparent); }
+  .ghost { border: 1px solid rgb(var(--slate-800)); background: rgb(var(--slate-900)); border-radius: 14px; padding: 12px 18px; font-weight: 600; color: rgb(var(--slate-200)); }
+  .note { font-size: 13px; color: rgb(var(--slate-400)); margin: 0; }
+  details { background: rgb(var(--slate-900)); border: 1px solid rgb(var(--slate-800)); border-radius: 16px; padding: 12px 16px; }
+  summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+  details ul { margin: 10px 0 2px; padding-left: 18px; display: grid; gap: 8px; font-size: 13px; color: rgb(var(--slate-300)); }
+  details a { color: var(--c-work); }
+
+  /* Sesión */
+  #session, #done { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 10px 0; }
+  .stage { position: relative; width: min(80vw, 46vh, 340px); aspect-ratio: 1; }
+  .stage svg.ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+  .ring .track { stroke: rgb(var(--slate-800)); }
+  .ring .prog { stroke: var(--c-work); transition: stroke-dashoffset .4s linear; }
+  .orb { position: absolute; inset: 7%; border-radius: 50%; transform: scale(var(--s, .42)); will-change: transform;
+    background: radial-gradient(circle at 50% 38%, color-mix(in srgb, var(--c-work) 45%, #fff) 0%, var(--c-work) 58%, color-mix(in srgb, var(--c-work) 78%, #000) 100%);
+    box-shadow: 0 0 calc(70px * var(--s, .42)) color-mix(in srgb, var(--c-work) 45%, transparent); }
+  .orb::after { content: ""; position: absolute; inset: 18%; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,.22), transparent 70%); }
+  .count { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: clamp(34px, 9vw, 52px); font-weight: 700; color: #fff;
+    font-variant-numeric: tabular-nums; text-shadow: 0 2px 12px rgba(0,0,0,.25); }
+  .say { text-align: center; min-height: 3.2em; }
+  .say .what { font-size: clamp(22px, 6vw, 28px); font-weight: 700; line-height: 1.2; }
+  .say .how { font-size: 14px; color: rgb(var(--slate-400)); margin-top: 4px; }
+  .strip { width: min(100%, 420px); }
+  .segs { display: flex; gap: 3px; height: 30px; position: relative; }
+  .segs div { border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; overflow: hidden; white-space: nowrap; color: rgb(var(--slate-200)); opacity: .55; transition: opacity .3s; }
+  .segs div.on { opacity: 1; }
+  .k-in { background: color-mix(in srgb, var(--c-work) 55%, transparent); }
+  .k-out { background: color-mix(in srgb, var(--c-short) 45%, transparent); }
+  .k-hold { background: rgb(var(--slate-700)); }
+  .head { position: absolute; top: -4px; bottom: -4px; width: 3px; border-radius: 3px; background: rgb(var(--slate-100)); left: 0; }
+  .meta { display: flex; gap: 14px; font-size: 13px; color: rgb(var(--slate-400)); font-variant-numeric: tabular-nums; }
+  .actions { display: flex; gap: 10px; }
+  .big { font-size: 34px; font-weight: 800; margin: 0; }
+  @media (prefers-reduced-motion: reduce) { .ring .prog, .segs div { transition: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="back" id="back" href="/" hidden>← Pomodoro</a>
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12.8 19.6A2 2 0 1 0 14 16H2" /><path d="M17.5 8a2.5 2.5 0 1 1 2 4H2" /><path d="M9.8 4.4A2 2 0 1 1 11 8H2" /></svg>
+      Respirar
+    </div>
+    <button class="iconbtn" id="sound" type="button" aria-pressed="false" title="Un tono suave en cada cambio, para hacerlo con los ojos cerrados">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /></svg>
+      <span id="sound-label">Sonido</span>
+    </button>
+  </header>
+
+  <section id="setup">
+    <div>
+      <h1>Respiración guiada</h1>
+      <p class="lead">Seguí el círculo: crece cuando inhalás y se achica cuando exhalás. Con 5 minutos alcanza.</p>
+    </div>
+    <div class="ex-list" id="ex-list" role="radiogroup" aria-label="Ejercicio"></div>
+    <div class="opts">
+      <div class="opt"><span>Duración</span><div class="seg" id="mins" role="radiogroup" aria-label="Duración"></div></div>
+      <div class="opt" id="side-opt" hidden><span>Cada lado del cuadrado</span><div class="seg" id="side" role="radiogroup" aria-label="Segundos por lado"></div></div>
+    </div>
+    <button class="primary" id="start" type="button">Empezar</button>
+    <p class="note">Respirá cómodo, sin forzar. Si te mareás, pará y volvé a respirar normal.</p>
+    <details>
+      <summary>Por qué estos ejercicios</summary>
+      <ul>
+        <li>Practicar respiración controlada bajó el estrés y la ansiedad frente a no hacer nada (metaanálisis de ensayos aleatorizados; efecto chico a moderado). <a href="https://doi.org/10.1038/s41598-022-27247-y" target="_blank" rel="noopener">Fincham y col., 2023</a></li>
+        <li>El suspiro cíclico, 5 minutos por día durante un mes, mejoró el ánimo y bajó la frecuencia respiratoria más que la meditación. La respiración cuadrada bajó la ansiedad en una medida parecida. <a href="https://doi.org/10.1016/j.xcrm.2022.100895" target="_blank" rel="noopener">Balban y col., 2023</a></li>
+        <li>Respirar lento (alrededor de 6 veces por minuto) aumenta la actividad parasimpática medida con la variabilidad cardíaca, durante y después de la práctica. <a href="https://doi.org/10.1016/j.neubiorev.2022.104711" target="_blank" rel="noopener">Laborde y col., 2022</a></li>
+        <li>A 6 respiraciones por minuto, exhalar más largo que inhalar dio más relajación que lo contrario. <a href="https://doi.org/10.1007/s10484-014-9253-x" target="_blank" rel="noopener">Van Diest y col., 2014</a></li>
+        <li>El entrenamiento a ese ritmo lento (biofeedback de variabilidad cardíaca) se asoció con una baja grande del estrés y la ansiedad. <a href="https://doi.org/10.1017/S0033291717001003" target="_blank" rel="noopener">Goessl y col., 2017</a></li>
+      </ul>
+    </details>
+  </section>
+
+  <section id="session" hidden aria-live="polite">
+    <div class="stage">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="track" cx="50" cy="50" r="48" fill="none" stroke-width="1.6" />
+        <circle class="prog" id="prog" cx="50" cy="50" r="48" fill="none" stroke-width="1.6" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100" />
+      </svg>
+      <div class="orb" id="orb"></div>
+      <div class="count" id="count" aria-hidden="true"></div>
+    </div>
+    <div class="say"><div class="what" id="what">Preparate</div><div class="how" id="how"></div></div>
+    <div class="strip" aria-hidden="true"><div class="segs" id="segs"><div class="head" id="head"></div></div></div>
+    <div class="meta"><span id="left"></span><span id="rate"></span></div>
+    <div class="actions">
+      <button class="ghost" id="pause" type="button">Pausar</button>
+      <button class="ghost" id="stop" type="button">Terminar</button>
+    </div>
+  </section>
+
+  <section id="done" hidden>
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="var(--c-work)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="m8 12 3 3 5-6" /></svg>
+    <p class="big">Listo</p>
+    <p class="lead" id="done-text"></p>
+    <div class="actions">
+      <button class="primary" id="again" type="button" style="width:auto;padding:13px 26px">Otra vez</button>
+      <a class="ghost" id="done-back" href="/" hidden style="text-decoration:none">Volver al Pomodoro</a>
+    </div>
+  </section>
+</div>
+
+<script>
+(() => {
+  // Cada fase: k = in (inhalar) | out (exhalar) | hold (sostener); s = segundos; v = cuán lleno queda el círculo (0 a 1)
+  const EXERCISES = [
+    { id: "suspiro", name: "Suspiro cíclico", tag: "Recomendado",
+      desc: "Dos inhalaciones por la nariz (la segunda corta, para llenar del todo) y una exhalación larga por la boca. Es el que más mejoró el ánimo en un ensayo de Stanford.",
+      pattern: () => [
+        { k: "in", s: 3, v: 0.82, what: "Inhalá por la nariz", how: "Lento y profundo" },
+        { k: "in", s: 1, v: 1, what: "Un poco más", how: "Una segunda inhalación corta" },
+        { k: "out", s: 6, v: 0, what: "Exhalá por la boca", how: "Lento, hasta vaciar" },
+      ] },
+    { id: "lenta", name: "Respiración lenta", tag: "6 por minuto",
+      desc: "Inhalás 4 segundos y exhalás 6. A este ritmo, con la exhalación más larga, sube la actividad parasimpática y la sensación de calma.",
+      pattern: () => [
+        { k: "in", s: 4, v: 1, what: "Inhalá", how: "Por la nariz, llenando la panza" },
+        { k: "out", s: 6, v: 0, what: "Exhalá", how: "Lento y largo" },
+      ] },
+    { id: "cuadrada", name: "Respiración cuadrada", tag: "Inhalar, sostener, exhalar, sostener",
+      desc: "Los cuatro tiempos iguales. Bajó la ansiedad tanto como el suspiro cíclico, aunque mejoró menos el ánimo. Si te cuesta sostener, elegí 3 segundos.",
+      pattern: (side) => [
+        { k: "in", s: side, v: 1, what: "Inhalá", how: "Por la nariz" },
+        { k: "hold", s: side, v: 1, what: "Sostené", how: "Con los pulmones llenos, sin apretar" },
+        { k: "out", s: side, v: 0, what: "Exhalá", how: "Lento" },
+        { k: "hold", s: side, v: 0, what: "Sostené", how: "Vacío, relajado" },
+      ] },
+  ];
+  const MINS = [2, 5, 10];
+  const SIDES = [3, 4, 5];
+  const PREP_MS = 3000;
+  const STORE = "respirar-v1";
+
+  const $ = (id) => document.getElementById(id);
+  const load = () => { try { return JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch (e) { return {}; } };
+  const save = () => { try { localStorage.setItem(STORE, JSON.stringify(prefs)); } catch (e) {} };
+  const prefs = Object.assign({ ex: "suspiro", mins: 5, side: 4, sound: false }, load());
+  if (!EXERCISES.some((e) => e.id === prefs.ex)) prefs.ex = "suspiro";
+  if (!MINS.includes(prefs.mins)) prefs.mins = 5;
+  if (!SIDES.includes(prefs.side)) prefs.side = 4;
+
+  // Si llegaste desde el Pomodoro, aparece el botón para volver (en la app aparte no hace falta)
+  const fromPomodoro = new URLSearchParams(location.search).get("desde") === "pomodoro";
+  $("back").hidden = !fromPomodoro;
+  $("done-back").hidden = !fromPomodoro;
+
+  const exById = (id) => EXERCISES.find((e) => e.id === id);
+  const patternOf = (ex) => ex.pattern(prefs.side);
+  const cycleSec = (p) => p.reduce((a, f) => a + f.s, 0);
+  const color = { in: "k-in", out: "k-out", hold: "k-hold" };
+
+  /* ---------- Pantalla de elección ---------- */
+  function renderSetup() {
+    const list = $("ex-list");
+    list.innerHTML = "";
+    EXERCISES.forEach((ex) => {
+      const b = document.createElement("button");
+      b.type = "button"; b.className = "ex"; b.setAttribute("role", "radio"); b.dataset.ex = ex.id;
+      b.setAttribute("aria-checked", String(prefs.ex === ex.id));
+      const p = patternOf(ex);
+      const total = cycleSec(p);
+      b.innerHTML = `<span class="name"></span><span class="tag"></span><span class="pat"></span><span class="desc"></span>`;
+      b.querySelector(".name").textContent = ex.name;
+      b.querySelector(".tag").textContent = ex.tag;
+      b.querySelector(".desc").textContent = ex.desc;
+      const pat = b.querySelector(".pat");
+      p.forEach((f) => { const i = document.createElement("i"); i.className = color[f.k]; i.style.flex = String(f.s / total); pat.appendChild(i); });
+      b.addEventListener("click", () => { prefs.ex = ex.id; save(); renderSetup(); });
+      list.appendChild(b);
+    });
+    const seg = (el, values, cur, fmt, onPick) => {
+      el.innerHTML = "";
+      values.forEach((v) => {
+        const b = document.createElement("button");
+        b.type = "button"; b.setAttribute("role", "radio"); b.setAttribute("aria-checked", String(v === cur)); b.textContent = fmt(v);
+        b.addEventListener("click", () => { onPick(v); save(); renderSetup(); });
+        el.appendChild(b);
+      });
+    };
+    seg($("mins"), MINS, prefs.mins, (v) => `${v} min`, (v) => { prefs.mins = v; });
+    seg($("side"), SIDES, prefs.side, (v) => `${v} s`, (v) => { prefs.side = v; });
+    $("side-opt").hidden = prefs.ex !== "cuadrada";
+    $("sound").setAttribute("aria-pressed", String(prefs.sound));
+    $("sound-label").textContent = prefs.sound ? "Sonido sí" : "Sonido";
+  }
+
+  /* ---------- Sonido opcional: un tono suave al empezar cada fase ---------- */
+  let ac = null;
+  const audio = () => {
+    if (!ac) { const C = window.AudioContext || window.webkitAudioContext; if (C) ac = new C(); }
+    if (ac && ac.state === "suspended") ac.resume();
+    return ac;
+  };
+  function tone(k) {
+    if (!prefs.sound) return;
+    const ctx = audio(); if (!ctx) return;
+    const t = ctx.currentTime, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = "sine";
+    const f = { in: [392, 523], out: [523, 330], hold: [440, 440] }[k];
+    o.frequency.setValueAtTime(f[0], t);
+    o.frequency.exponentialRampToValueAtTime(f[1], t + 0.6);
+    g.gain.setValueAtTime(0.0001, t);
+    g.gain.exponentialRampToValueAtTime(0.09, t + 0.06);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+    o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.95);
+  }
+
+  /* ---------- Pantalla siempre encendida mientras respirás ---------- */
+  let lock = null;
+  const wake = async () => { try { if (navigator.wakeLock && !lock) { lock = await navigator.wakeLock.request("screen"); lock.addEventListener("release", () => { lock = null; }); } } catch (e) { lock = null; } };
+  const sleep = () => { try { if (lock) lock.release(); } catch (e) {} lock = null; };
+
+  /* ---------- Sesión ---------- */
+  let run = null; // { ex, p, starts, cycleMs, cycles, t0, pausedAt, phase, raf }
+  const ease = (x) => 0.5 - 0.5 * Math.cos(Math.PI * Math.min(1, Math.max(0, x)));
+  const MIN_S = 0.42;
+  const fmt = (ms) => { const s = Math.max(0, Math.ceil(ms / 1000)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
+
+  function start() {
+    const ex = exById(prefs.ex), p = patternOf(ex);
+    const cycleMs = cycleSec(p) * 1000;
+    const cycles = Math.max(1, Math.round((prefs.mins * 60000) / cycleMs));
+    const starts = []; let acc = 0; p.forEach((f) => { starts.push(acc); acc += f.s * 1000; });
+    run = { ex, p, starts, cycleMs, cycles, t0: performance.now() + PREP_MS, pausedAt: null, phase: -2, cycle: -1 };
+    // Tira con el dibujo de un ciclo
+    const segs = $("segs");
+    segs.querySelectorAll(".seg-f").forEach((n) => n.remove());
+    p.forEach((f, i) => {
+      const d = document.createElement("div");
+      d.className = `seg-f ${color[f.k]}`; d.style.flex = String(f.s); d.dataset.i = String(i);
+      d.textContent = `${f.s}s`;
+      segs.insertBefore(d, $("head"));
+    });
+    $("rate").textContent = `${(60000 / cycleMs).toFixed(1).replace(".0", "").replace(".", ",")} resp/min`;
+    $("pause").textContent = "Pausar";
+    show("session");
+    if (prefs.sound) audio();
+    wake();
+    run.raf = requestAnimationFrame(frame);
+  }
+
+  function setPhase(i, f) {
+    $("what").textContent = f.what;
+    $("how").textContent = f.how;
+    document.querySelectorAll("#segs .seg-f").forEach((n) => n.classList.toggle("on", Number(n.dataset.i) === i));
+    tone(f.k);
+  }
+
+  function frame(now) {
+    if (!run) return;
+    if (run.pausedAt !== null) { run.raf = requestAnimationFrame(frame); return; }
+    const el = now - run.t0;
+    const orb = $("orb");
+    if (el < 0) {
+      // Cuenta regresiva antes de empezar, con el círculo vacío
+      if (run.phase !== -1) { run.phase = -1; $("what").textContent = "Preparate"; $("how").textContent = "Soltá los hombros y apoyá la espalda"; }
+      $("count").textContent = String(Math.ceil(-el / 1000));
+      orb.style.setProperty("--s", String(MIN_S));
+      $("left").textContent = fmt(run.cycles * run.cycleMs);
+      run.raf = requestAnimationFrame(frame);
+      return;
+    }
+    const cycle = Math.floor(el / run.cycleMs);
+    if (cycle >= run.cycles) return finish(true);
+    const inCyc = el - cycle * run.cycleMs;
+    let i = run.p.length - 1;
+    while (i > 0 && inCyc < run.starts[i]) i--;
+    const f = run.p[i], dur = f.s * 1000, x = (inCyc - run.starts[i]) / dur;
+    const from = run.p[(i - 1 + run.p.length) % run.p.length].v;
+    const v = from + (f.v - from) * ease(x);
+    if (i !== run.phase || cycle !== run.cycle) { run.phase = i; run.cycle = cycle; setPhase(i, f); }
+    orb.style.setProperty("--s", String(MIN_S + (1 - MIN_S) * v));
+    $("count").textContent = String(Math.max(1, Math.ceil((dur - (inCyc - run.starts[i])) / 1000)));
+    $("head").style.left = `calc(${(inCyc / run.cycleMs) * 100}% - 1.5px)`;
+    const total = run.cycles * run.cycleMs;
+    $("prog").style.strokeDashoffset = String(100 - (el / total) * 100);
+    $("left").textContent = fmt(total - el);
+    run.raf = requestAnimationFrame(frame);
+  }
+
+  function pause() {
+    if (!run) return;
+    if (run.pausedAt === null) {
+      run.pausedAt = performance.now();
+      $("pause").textContent = "Seguir"; $("what").textContent = "En pausa"; $("how").textContent = "Respirá normal";
+      sleep();
+    } else {
+      run.t0 += performance.now() - run.pausedAt; run.pausedAt = null; run.phase = -2;
+      $("pause").textContent = "Pausar";
+      wake();
+    }
+  }
+
+  function finish(completed) {
+    if (!run) return;
+    cancelAnimationFrame(run.raf);
+    const el = Math.max(0, (run.pausedAt ?? performance.now()) - run.t0);
+    const done = Math.min(el, run.cycles * run.cycleMs);
+    const name = run.ex.name.toLowerCase();
+    run = null;
+    sleep();
+    if (completed) tone("out");
+    if (done < 15000) { show("setup"); return; }
+    const m = Math.floor(done / 60000), s = Math.round((done % 60000) / 1000);
+    $("done-text").textContent = `Hiciste ${m ? `${m} min${s ? ` ${s} s` : ""}` : `${s} s`} de ${name}.`;
+    show("done");
+  }
+
+  function show(id) {
+    ["setup", "session", "done"].forEach((s) => { $(s).hidden = s !== id; });
+    if (id === "setup") renderSetup();
+  }
+
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible" && run && run.pausedAt === null) wake(); });
+  $("start").addEventListener("click", start);
+  $("pause").addEventListener("click", pause);
+  $("stop").addEventListener("click", () => finish(false));
+  $("again").addEventListener("click", () => show("setup"));
+  $("sound").addEventListener("click", () => { prefs.sound = !prefs.sound; save(); if (prefs.sound) { audio(); tone("in"); } renderSetup(); });
+  renderSetup();
+})();
+</script>
+</body>
+</html>
