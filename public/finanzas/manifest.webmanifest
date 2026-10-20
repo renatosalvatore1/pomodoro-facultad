@@ -1,0 +1,15 @@
+{
+  "name": "Finanzas",
+  "short_name": "Finanzas",
+  "description": "Gastos, ingresos, cuotas y ahorro",
+  "start_url": "/finanzas",
+  "scope": "/finanzas",
+  "display": "standalone",
+  "lang": "es-AR",
+  "background_color": "#020617",
+  "theme_color": "#664ce6",
+  "icons": [
+    { "src": "/finanzas/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/finanzas/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

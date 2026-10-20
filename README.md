@@ -17,6 +17,14 @@ Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30
 
 En la pestaña Timer se elige un sonido de fondo (arroyo, ruido rosa o ruido blanco) que suena mientras corre el trabajo y se corta en la pausa y el descanso. Se genera en el navegador (sin archivos), se elige por dispositivo y suena solo en el dispositivo donde arrancaste el trabajo.
 
+## Finanzas (/finanzas)
+
+App aparte (se instala en el iPhone como otra app) para registrar ingresos, gastos, cuotas y gastos o ingresos fijos de todos los meses. Calcula cuánto podés gastar por día para cumplir una meta de ahorro, muestra lo ya comprometido en cuotas para los próximos meses y avisa de gastos chicos que suman mucho.
+
+- Los datos viven en `finanzas/datos.json` del mismo Blob privado, a través de `api/finanzas.js`, con la misma clave (`POMODORO_KEY`).
+- Cada dispositivo guarda una copia local y sube los cambios a los pocos segundos; si dos dispositivos guardan a la vez, se unen (lo borrado no vuelve).
+- Se puede descargar todo como planilla CSV.
+
 ## Widget del tren (iPhone)
 
 `/widget` es una página para instalar un widget de [Scriptable](https://apps.apple.com/app/scriptable/id1405459188) con los próximos trenes del ramal Retiro – J. L. Suárez (Mitre). El widget consulta `/api/trenes`, que toma los datos de [api-trenes](https://github.com/ariedro/api-trenes) (no oficial) y los simplifica:
