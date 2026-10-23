@@ -19,7 +19,7 @@ En la pestaña Timer se elige un sonido de fondo (arroyo, ruido rosa o ruido bla
 
 ## Finanzas (/finanzas)
 
-App aparte (se instala en el iPhone como otra app) para registrar ingresos, gastos, cuotas y gastos o ingresos fijos de todos los meses. Calcula cuánto podés gastar por día para cumplir una meta de ahorro, muestra lo ya comprometido en cuotas para los próximos meses y avisa de gastos chicos que suman mucho.
+App aparte (se instala en el iPhone como otra app) para registrar ingresos, gastos, cuotas y gastos o ingresos fijos de todos los meses. La pantalla principal muestra cuánto queda para gastar en el mes y un gráfico día por día de cuánto podés gastar y cuánto gastaste: lo que queda se reparte entre los días que faltan, y si un día te pasás, los siguientes quedan en negativo hasta compensarlo. También muestra lo ya comprometido en cuotas para los próximos meses y avisa de gastos chicos que suman mucho.
 
 - Los datos viven en `finanzas/datos.json` del mismo Blob privado, a través de `api/finanzas.js`, con la misma clave (`POMODORO_KEY`).
 - Cada dispositivo guarda una copia local y sube los cambios a los pocos segundos; si dos dispositivos guardan a la vez, se unen (lo borrado no vuelve).
