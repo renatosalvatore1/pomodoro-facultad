@@ -4,6 +4,8 @@ App de productividad: timer Pomodoro con métricas semanales y lista de tareas, 
 
 Las tareas completadas se borran; en la nube queda solo una marca de "hecha" (30 días) para que otro dispositivo desactualizado no la vuelva a agregar.
 
+En la misma pestaña hay un cuadro de fechas importantes (exámenes, entregas y otras) ordenadas por cercanía, con cuánto falta para cada una. Tocando una se edita o se borra; también se sincronizan entre dispositivos.
+
 ## Cómo está armado
 
 | Parte | Qué hace |
